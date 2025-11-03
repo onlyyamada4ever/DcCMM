@@ -54,6 +54,9 @@
             CopyBtn = new Button();
             DarkThemeBtn = new Button();
             LightThemeBtn = new Button();
+            DefaultBtn = new Button();
+            DefaultBgBtn = new Button();
+            DcCMOutput = new RichTextBox();
             SuspendLayout();
             // 
             // TextBox
@@ -61,7 +64,7 @@
             TextBox.BackColor = SystemColors.Window;
             TextBox.Location = new Point(12, 99);
             TextBox.Name = "TextBox";
-            TextBox.Size = new Size(1152, 655);
+            TextBox.Size = new Size(892, 655);
             TextBox.TabIndex = 0;
             TextBox.Text = "";
             // 
@@ -97,6 +100,7 @@
             BlurpleBgBtn.TabIndex = 3;
             BlurpleBgBtn.Text = "Blurple / 청보라색";
             BlurpleBgBtn.UseVisualStyleBackColor = false;
+            BlurpleBgBtn.Click += BlurpleBgBtn_Click;
             // 
             // Grey3BgBtn
             // 
@@ -107,6 +111,7 @@
             Grey3BgBtn.TabIndex = 4;
             Grey3BgBtn.Text = "Grey3 / 회색3";
             Grey3BgBtn.UseVisualStyleBackColor = false;
+            Grey3BgBtn.Click += Grey3BgBtn_Click;
             // 
             // Grey2BgBtn
             // 
@@ -117,6 +122,7 @@
             Grey2BgBtn.TabIndex = 5;
             Grey2BgBtn.Text = "Grey2 / 회색2";
             Grey2BgBtn.UseVisualStyleBackColor = false;
+            Grey2BgBtn.Click += Grey2BgBtn_Click;
             // 
             // Grey1BgBtn
             // 
@@ -127,6 +133,7 @@
             Grey1BgBtn.TabIndex = 6;
             Grey1BgBtn.Text = "Grey1 / 회색1";
             Grey1BgBtn.UseVisualStyleBackColor = false;
+            Grey1BgBtn.Click += Grey1BgBtn_Click;
             // 
             // OrangeBgBtn
             // 
@@ -137,6 +144,7 @@
             OrangeBgBtn.TabIndex = 7;
             OrangeBgBtn.Text = "Orange / 주황";
             OrangeBgBtn.UseVisualStyleBackColor = false;
+            OrangeBgBtn.Click += OrangeBgBtn_Click;
             // 
             // Grey4BgBtn
             // 
@@ -147,6 +155,7 @@
             Grey4BgBtn.TabIndex = 8;
             Grey4BgBtn.Text = "Grey4 / 회색4";
             Grey4BgBtn.UseVisualStyleBackColor = false;
+            Grey4BgBtn.Click += Grey4BgBtn_Click;
             // 
             // WarmIvoryBgBtn
             // 
@@ -157,6 +166,7 @@
             WarmIvoryBgBtn.TabIndex = 9;
             WarmIvoryBgBtn.Text = "Warm Ivory / 미색";
             WarmIvoryBgBtn.UseVisualStyleBackColor = false;
+            WarmIvoryBgBtn.Click += WarmIvoryBgBtn_Click;
             // 
             // WhiteBtn
             // 
@@ -169,6 +179,7 @@
             WhiteBtn.TabIndex = 10;
             WhiteBtn.Text = "White / 하양";
             WhiteBtn.UseVisualStyleBackColor = false;
+            WhiteBtn.Click += WhiteBtn_Click;
             // 
             // TealBtn
             // 
@@ -179,6 +190,7 @@
             TealBtn.TabIndex = 11;
             TealBtn.Text = "Teal / 청록";
             TealBtn.UseVisualStyleBackColor = true;
+            TealBtn.Click += TealBtn_Click;
             // 
             // PinkBtn
             // 
@@ -189,6 +201,7 @@
             PinkBtn.TabIndex = 12;
             PinkBtn.Text = "Pink / 분홍";
             PinkBtn.UseVisualStyleBackColor = true;
+            PinkBtn.Click += PinkBtn_Click;
             // 
             // BlueBtn
             // 
@@ -199,6 +212,7 @@
             BlueBtn.TabIndex = 13;
             BlueBtn.Text = "Blue / 파랑";
             BlueBtn.UseVisualStyleBackColor = true;
+            BlueBtn.Click += BlueBtn_Click;
             // 
             // YellowBtn
             // 
@@ -210,6 +224,7 @@
             YellowBtn.TabIndex = 14;
             YellowBtn.Text = "Yellow / 노랑";
             YellowBtn.UseVisualStyleBackColor = true;
+            YellowBtn.Click += YellowBtn_Click;
             // 
             // GreenBtn
             // 
@@ -221,6 +236,7 @@
             GreenBtn.TabIndex = 15;
             GreenBtn.Text = "Green / 초록";
             GreenBtn.UseVisualStyleBackColor = true;
+            GreenBtn.Click += GreenBtn_Click;
             // 
             // RedBtn
             // 
@@ -231,6 +247,7 @@
             RedBtn.TabIndex = 16;
             RedBtn.Text = "Red / 빨강";
             RedBtn.UseVisualStyleBackColor = true;
+            RedBtn.Click += RedBtn_Click;
             // 
             // EmailLabel
             // 
@@ -263,7 +280,7 @@
             // 
             BoldChkBox.AutoSize = true;
             BoldChkBox.Font = new Font("Malgun Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 129);
-            BoldChkBox.Location = new Point(700, 49);
+            BoldChkBox.Location = new Point(783, 49);
             BoldChkBox.Name = "BoldChkBox";
             BoldChkBox.Size = new Size(52, 19);
             BoldChkBox.TabIndex = 20;
@@ -275,7 +292,7 @@
             // 
             UndlChkBox.AutoSize = true;
             UndlChkBox.Font = new Font("Malgun Gothic", 9F, FontStyle.Underline, GraphicsUnit.Point, 129);
-            UndlChkBox.Location = new Point(700, 74);
+            UndlChkBox.Location = new Point(783, 74);
             UndlChkBox.Name = "UndlChkBox";
             UndlChkBox.Size = new Size(77, 19);
             UndlChkBox.TabIndex = 21;
@@ -286,7 +303,7 @@
             // ClrBtn
             // 
             ClrBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            ClrBtn.Location = new Point(992, 74);
+            ClrBtn.Location = new Point(1000, 74);
             ClrBtn.Name = "ClrBtn";
             ClrBtn.Size = new Size(83, 23);
             ClrBtn.TabIndex = 24;
@@ -296,33 +313,66 @@
             // CopyBtn
             // 
             CopyBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            CopyBtn.Location = new Point(1081, 74);
+            CopyBtn.Location = new Point(1089, 74);
             CopyBtn.Name = "CopyBtn";
             CopyBtn.Size = new Size(83, 23);
             CopyBtn.TabIndex = 25;
             CopyBtn.Text = "Copy / 복사";
             CopyBtn.UseVisualStyleBackColor = true;
+            CopyBtn.Click += CopyBtnClick;
             // 
             // DarkThemeBtn
             // 
             DarkThemeBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            DarkThemeBtn.Location = new Point(903, 74);
+            DarkThemeBtn.Location = new Point(910, 74);
             DarkThemeBtn.Name = "DarkThemeBtn";
             DarkThemeBtn.Size = new Size(83, 23);
             DarkThemeBtn.TabIndex = 26;
             DarkThemeBtn.Text = "Dark mode";
             DarkThemeBtn.UseVisualStyleBackColor = true;
-            DarkThemeBtn.Click += DarkThemeBtn_Click;
             // 
             // LightThemeBtn
             // 
             LightThemeBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            LightThemeBtn.Location = new Point(903, 74);
+            LightThemeBtn.Location = new Point(911, 74);
             LightThemeBtn.Name = "LightThemeBtn";
             LightThemeBtn.Size = new Size(83, 23);
             LightThemeBtn.TabIndex = 27;
             LightThemeBtn.Text = "Light mode";
             LightThemeBtn.UseVisualStyleBackColor = true;
+            // 
+            // DefaultBtn
+            // 
+            DefaultBtn.BackColor = Color.White;
+            DefaultBtn.Font = new Font("Malgun Gothic", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            DefaultBtn.ForeColor = Color.Black;
+            DefaultBtn.Location = new Point(697, 12);
+            DefaultBtn.Name = "DefaultBtn";
+            DefaultBtn.Size = new Size(80, 25);
+            DefaultBtn.TabIndex = 28;
+            DefaultBtn.Text = "Default";
+            DefaultBtn.UseVisualStyleBackColor = false;
+            DefaultBtn.Click += DefaultBtn_Click;
+            // 
+            // DefaultBgBtn
+            // 
+            DefaultBgBtn.BackColor = Color.White;
+            DefaultBgBtn.Location = new Point(697, 43);
+            DefaultBgBtn.Name = "DefaultBgBtn";
+            DefaultBgBtn.Size = new Size(80, 50);
+            DefaultBgBtn.TabIndex = 30;
+            DefaultBgBtn.Text = "Default";
+            DefaultBgBtn.UseVisualStyleBackColor = false;
+            DefaultBgBtn.Click += DefaultBgBtn_Click;
+            // 
+            // DcCMOutput
+            // 
+            DcCMOutput.Location = new Point(910, 99);
+            DcCMOutput.Name = "DcCMOutput";
+            DcCMOutput.ReadOnly = true;
+            DcCMOutput.Size = new Size(263, 655);
+            DcCMOutput.TabIndex = 31;
+            DcCMOutput.Text = "";
             // 
             // Form1
             // 
@@ -330,6 +380,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(251, 251, 251);
             ClientSize = new Size(1176, 766);
+            Controls.Add(DcCMOutput);
+            Controls.Add(DefaultBgBtn);
+            Controls.Add(DefaultBtn);
             Controls.Add(LightThemeBtn);
             Controls.Add(DarkThemeBtn);
             Controls.Add(CopyBtn);
@@ -390,5 +443,8 @@
         private Button CopyBtn;
         private Button DarkThemeBtn;
         private Button LightThemeBtn;
+        private Button DefaultBtn;
+        private Button DefaultBgBtn;
+        private RichTextBox DcCMOutput;
     }
 }
