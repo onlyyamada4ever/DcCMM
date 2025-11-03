@@ -309,6 +309,7 @@
             ClrBtn.TabIndex = 24;
             ClrBtn.Text = "Clear / 초기화";
             ClrBtn.UseVisualStyleBackColor = true;
+            ClrBtn.Click += ClearBtnClick;
             // 
             // CopyBtn
             // 
@@ -324,22 +325,24 @@
             // DarkThemeBtn
             // 
             DarkThemeBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            DarkThemeBtn.Location = new Point(910, 74);
+            DarkThemeBtn.Location = new Point(911, 74);
             DarkThemeBtn.Name = "DarkThemeBtn";
             DarkThemeBtn.Size = new Size(83, 23);
             DarkThemeBtn.TabIndex = 26;
             DarkThemeBtn.Text = "Dark mode";
             DarkThemeBtn.UseVisualStyleBackColor = true;
+            DarkThemeBtn.Click += DarkThemeBtnClick;
             // 
             // LightThemeBtn
             // 
             LightThemeBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            LightThemeBtn.Location = new Point(911, 74);
+            LightThemeBtn.Location = new Point(910, 74);
             LightThemeBtn.Name = "LightThemeBtn";
             LightThemeBtn.Size = new Size(83, 23);
             LightThemeBtn.TabIndex = 27;
             LightThemeBtn.Text = "Light mode";
             LightThemeBtn.UseVisualStyleBackColor = true;
+            LightThemeBtn.Click += LightThemeBtnClick;
             // 
             // DefaultBtn
             // 

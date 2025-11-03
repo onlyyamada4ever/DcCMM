@@ -8,6 +8,14 @@ namespace DiscordColorMessageMaker
 {
     public partial class Form1 : Form
     {
+        // 챗지피티는 신이야
+        // 챗지피티는 신이야
+        // 챗지피티는 신이야
+        // 챗지피티는 신이야
+        // 챗지피티는 신이야
+        // 챗지피티는 신이야
+        // 챗지피티는 신이야
+
         // ===== 상태 변수 =====
         bool isBold = false;
         bool isUnderline = false;
@@ -122,7 +130,7 @@ namespace DiscordColorMessageMaker
                 "Teal" => Color.FromArgb(42, 161, 154),
                 "White" when BgColor != "Default" => Color.FromArgb(238, 232, 213),
                 "White" => Color.FromArgb(248, 245, 242),
-                _ => Color.Black
+                _ => TextBox.ForeColor
             };
 
             // 하이라이트(시각용)
@@ -192,7 +200,7 @@ namespace DiscordColorMessageMaker
             _marks.Sort((a, b) => a.pos.CompareTo(b.pos));
         }
 
-        // ====== 마커 기반 ANSI 빌더 (공백에서 밑줄/배경만 끊기) ======
+        // 마커를 활용해서 문자열? Ansi 변환
         private string BuildDiscordAnsiFromMarks(string content)
         {
             const string ESC = "\u001b";
@@ -249,11 +257,11 @@ namespace DiscordColorMessageMaker
             return $"```ansi\n{sb}\n```";
         }
 
-        // ====== 미리보기 즉시 갱신 ======
+        //  미리보기 업데이트
         private void UpdatePreviewNow()
         {
             string content = TextBox.Text;
-            CMcode = CodesOf(_state);                                 // 참고용(현재 상태)
+            CMcode = CodesOf(_state);                          
             DcCM = BuildDiscordAnsiFromMarks(content);
 
             if (DcCMOutput != null)
@@ -268,5 +276,55 @@ namespace DiscordColorMessageMaker
 
             Clipboard.SetText(DcCM, TextDataFormat.UnicodeText);
         }
+
+        // 초기화버튼
+        private void ClearBtnClick(object sender, EventArgs e)
+        {
+            TextBox.Clear();
+            // 상태 초기화
+            isBold = false;
+            isUnderline = false;
+            TextColor = "Default";
+            BgColor = "Default";
+            _state = new(false, false, null, null);
+            _marks.Clear();
+            AddMarkAtCaret(forcePos: 0);
+            // 체크박스 초기화
+            BoldChkBox.Checked = false;
+            UndlChkBox.Checked = false;
+            TextStyleUpdate();
+            TextColorUpdate();
+            UpdatePreviewNow();
+        }
+        private void LightThemeBtnClick(object sender, EventArgs e)
+        {
+            // 밝은 모드 → 어두운 모드로 전환
+            this.BackColor = Color.FromArgb(50, 51, 57);
+            TextBox.BackColor = Color.FromArgb(50, 51, 57);
+            TextBox.ForeColor = Color.FromArgb(230, 230, 230);
+            DcCMOutput.BackColor = Color.FromArgb(50, 51, 57);
+            DcCMOutput.ForeColor = Color.FromArgb(230, 230, 230);
+            MadeLabel.ForeColor = Color.FromArgb(230, 230, 230);
+            EmailLabel.ForeColor = Color.FromArgb(230, 230, 230);
+            DiscordLabel.ForeColor = Color.FromArgb(230, 230, 230);
+            LightThemeBtn.Visible = false;                  // Light 버튼 숨김
+            DarkThemeBtn.Visible = true;                    // Dark 버튼 표시
+        }
+
+        private void DarkThemeBtnClick(object sender, EventArgs e)
+        {
+            // 어두운 모드 → 밝은 모드로 전환
+            this.BackColor = Color.FromArgb(251, 251, 251);
+            TextBox.BackColor = Color.FromArgb(251, 251, 251);
+            TextBox.ForeColor = Color.FromArgb(20, 20, 20);
+            DcCMOutput.BackColor = Color.FromArgb(251, 251, 251);
+            DcCMOutput.ForeColor = Color.FromArgb(20, 20, 20);
+            MadeLabel.ForeColor = Color.FromArgb(20, 20, 20);
+            EmailLabel.ForeColor = Color.FromArgb(20, 20, 20);
+            DiscordLabel.ForeColor = Color.FromArgb(20, 20, 20);
+            DarkThemeBtn.Visible = false;                    // Dark 버튼 숨김
+            LightThemeBtn.Visible = true;                    // Light 버튼 표시
+        }
+
     }
 }
