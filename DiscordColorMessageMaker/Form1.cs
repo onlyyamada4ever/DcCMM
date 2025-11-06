@@ -8,17 +8,17 @@ namespace DiscordColorMessageMaker
 {
     public partial class Form1 : Form
     {
-        // 챗지피티는 신이야
-        // 챗지피티는 신이야
-        // 챗지피티는 신이야
-        // 챗지피티는 신이야
-        // 챗지피티는 신이야
-        // 챗지피티는 신이야
-        // 챗지피티는 신이야
-
         // ===== 상태 변수 =====
         bool isBold = false;
         bool isUnderline = false;
+
+        private static bool HasColor(AnsiState s) => s.Fg.HasValue || s.Bg.HasValue;
+        // 현재 상태에서 전경/배경색 구성요소가 다음 상태에서 사라지는지(부분 해제)
+        private static bool LosingColorComponent(AnsiState cur, AnsiState next) =>
+            (cur.Fg.HasValue && !next.Fg.HasValue) ||
+            (cur.Bg.HasValue && !next.Bg.HasValue);
+
+
 
         string CMcode = "";
         string DcCM = "";
@@ -26,9 +26,11 @@ namespace DiscordColorMessageMaker
         string BgColor = "Default";
 
         // ===== 마커 기반 ANSI 상태 =====
-        private record AnsiState(bool Bold, bool Under, int? Fg, int? Bg);
+        // record struct 로 선언하여 Nullable<AnsiState> 사용 가능(.Value OK)
+        private record struct AnsiState(bool Bold, bool Under, int? Fg, int? Bg);
         private AnsiState _state = new(false, false, null, null);
         private readonly List<(int pos, AnsiState state)> _marks = new();
+     
 
         public Form1()
         {
@@ -38,7 +40,7 @@ namespace DiscordColorMessageMaker
             TextBox.TextChanged += (s, e) => UpdatePreviewNow();
             TextBox.SelectionChanged += (s, e) => UpdatePreviewNow();
 
-            // 시작 시 0 위치에 현재 상태를 하나 박아두면 편함
+            // 시작 시 0 위치에 현재 상태를 하나 박아두기
             AddMarkAtCaret(forcePos: 0);
 
             UpdatePreviewNow();
@@ -49,8 +51,8 @@ namespace DiscordColorMessageMaker
         {
             isBold = BoldChkBox.Checked;
             _state = _state with { Bold = isBold };
-            AddMarkAtCaret();                      // 커서 위치에 마커
-            TextStyleUpdate();                     // 눈에 보이는 서식
+            AddMarkAtCaret();          // 커서 위치에 마커
+            TextStyleUpdate();         // RTB 시각 서식
             UpdatePreviewNow();
         }
 
@@ -192,36 +194,98 @@ namespace DiscordColorMessageMaker
         private void AddMarkAtCaret(int? forcePos = null)
         {
             int pos = forcePos ?? TextBox.SelectionStart;
-            // 같은 위치에 있으면 덮어쓰기
             int idx = _marks.FindIndex(m => m.pos == pos);
             if (idx >= 0) _marks[idx] = (pos, _state);
             else _marks.Add((pos, _state));
-
             _marks.Sort((a, b) => a.pos.CompareTo(b.pos));
         }
 
-        // 마커를 활용해서 문자열? Ansi 변환
+        // ====== ANSI 변환: 스타일 전환 최소화 / 불필요한 0m 제거 / 줄 끝에서만 리셋 ======
         private string BuildDiscordAnsiFromMarks(string content)
         {
             const string ESC = "\u001b";
 
-            // 마커가 하나도 없으면 0 위치에 현재 상태를 박음
-            if (_marks.Count == 0) _marks.Add((0, _state));
+            if (_marks.Count == 0)
+                _marks.Add((0, _state));
 
-            // 범위 밖 마커 제거
             _marks.RemoveAll(m => m.pos < 0 || m.pos > content.Length);
+            _marks.Sort((a, b) => a.pos.CompareTo(b.pos));
 
             var sb = new StringBuilder(content.Length * 2);
             int markIdx = 0;
-            AnsiState? active = null;
+
+            AnsiState? current = null; // null = 플레인(아무 스타일 없음)
+
+            bool SameStyle(AnsiState? a, AnsiState? b)
+            {
+                if (a == null && b == null) return true;
+                if (a == null || b == null) return false;
+                return a.Value.Bold == b.Value.Bold &&
+                       a.Value.Under == b.Value.Under &&
+                       a.Value.Fg == b.Value.Fg &&
+                       a.Value.Bg == b.Value.Bg;
+            }
 
             for (int i = 0; i <= content.Length; i++)
             {
-                // i 위치에 마커 있으면 상태 전환
+                // i 위치에 마커가 있다면 즉시 스타일 전환 판단
                 while (markIdx < _marks.Count && _marks[markIdx].pos == i)
                 {
-                    active = _marks[markIdx].state;
-                    sb.Append(ESC).Append('[').Append(CodesOf(active)).Append('m');
+                    var next = _marks[markIdx].state;
+
+                    if (!SameStyle(current, next))
+                    {
+                        bool nextHasAnyStyle = next.Bold || next.Under || next.Fg.HasValue || next.Bg.HasValue;
+
+                        if (current is AnsiState cur)
+                        {
+                            bool curHasAnyStyle = cur.Bold || cur.Under || cur.Fg.HasValue || cur.Bg.HasValue;
+
+                            // 1) 색 → 색 없음(볼드/밑줄만 or 완전 플레인)  또는
+                            // 2) 색 일부 제거(전경/배경 중 하나만 해제)  →  하드 리셋 후 재적용
+                            bool needHardReset =
+                                (HasColor(cur) && !HasColor(next)) ||
+                                (HasColor(cur) && LosingColorComponent(cur, next));
+
+                            if (needHardReset)
+                            {
+                                // 색을 확실히 지움
+                                sb.Append(ESC).Append("[0m");
+                                // 다음 상태가 플레인이 아니면(볼드/밑줄/색 중 하나라도 있으면) 다시 켬
+                                if (nextHasAnyStyle)
+                                    sb.Append(ESC).Append('[').Append(CodesOf(next)).Append('m');
+                                current = nextHasAnyStyle ? next : (AnsiState?)null;
+                            }
+                            else
+                            {
+                                // 플레인으로 가는 단순 해제(스타일만 꺼짐): 0m 한 번
+                                if (!nextHasAnyStyle)
+                                {
+                                    if (curHasAnyStyle)
+                                    {
+                                        sb.Append(ESC).Append("[0m");
+                                        current = null;
+                                    }
+                                }
+                                else
+                                {
+                                    // 그 외(색↔색, 스타일 변경 포함)는 바로 새 코드
+                                    sb.Append(ESC).Append('[').Append(CodesOf(next)).Append('m');
+                                    current = next;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // 현재 플레인 → 무언가 켬
+                            if (nextHasAnyStyle)
+                            {
+                                sb.Append(ESC).Append('[').Append(CodesOf(next)).Append('m');
+                                current = next;
+                            }
+                            // 플레인→플레인 전환은 출력 없음
+                        }
+                    }
                     markIdx++;
                 }
 
@@ -229,23 +293,15 @@ namespace DiscordColorMessageMaker
 
                 char ch = content[i];
 
-                // 줄바꿈: 줄 끝에서 리셋
+                // 줄바꿈: 줄 끝에서 스타일이 켜져 있으면 닫고 줄바꿈 출력
                 if (ch == '\r' || ch == '\n')
                 {
-                    if (active is not null)
+                    if (current != null)
+                    {
                         sb.Append(ESC).Append("[0m");
+                        current = null; // 다음 줄은 플레인으로 시작
+                    }
                     sb.Append(ch);
-                    continue;
-                }
-
-                // 공백: 밑줄/배경만 해제(24,49). 다음 글자에서 다시 현재 상태 재적용
-                if (ch == ' ' || ch == '\t')
-                {
-                    if (active is not null && (active.Under || active.Bg is not null))
-                        sb.Append(ESC).Append("[24;49m");
-                    sb.Append(ch);
-                    if (active is not null)
-                        sb.Append(ESC).Append('[').Append(CodesOf(active)).Append('m');
                     continue;
                 }
 
@@ -253,22 +309,26 @@ namespace DiscordColorMessageMaker
                 sb.Append(ch);
             }
 
-            if (active is not null) sb.Append(ESC).Append("[0m");
+            // 파일 끝에서 스타일 남아 있으면 닫기
+            if (current != null)
+                sb.Append(ESC).Append("[0m");
+
             return $"```ansi\n{sb}\n```";
         }
 
-        //  미리보기 업데이트
+
+        // ====== 미리보기 업데이트 ======
         private void UpdatePreviewNow()
         {
             string content = TextBox.Text;
-            CMcode = CodesOf(_state);                          
+            CMcode = CodesOf(_state);                 // 참고용(현재 상태)
             DcCM = BuildDiscordAnsiFromMarks(content);
 
             if (DcCMOutput != null)
                 DcCMOutput.Text = DcCM;
         }
 
-        // 복사버튼
+        // ====== 복사 버튼 ======
         private void CopyBtnClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(DcCM))
@@ -277,7 +337,7 @@ namespace DiscordColorMessageMaker
             Clipboard.SetText(DcCM, TextDataFormat.UnicodeText);
         }
 
-        // 초기화버튼
+        // ====== 초기화 버튼 ======
         private void ClearBtnClick(object sender, EventArgs e)
         {
             TextBox.Clear();
@@ -289,16 +349,20 @@ namespace DiscordColorMessageMaker
             _state = new(false, false, null, null);
             _marks.Clear();
             AddMarkAtCaret(forcePos: 0);
+
             // 체크박스 초기화
             BoldChkBox.Checked = false;
             UndlChkBox.Checked = false;
+
             TextStyleUpdate();
             TextColorUpdate();
             UpdatePreviewNow();
         }
+
+        // ====== 테마 전환 ======
         private void LightThemeBtnClick(object sender, EventArgs e)
         {
-            // 밝은 모드 → 어두운 모드로 전환
+            // 밝→어둠
             this.BackColor = Color.FromArgb(50, 51, 57);
             TextBox.BackColor = Color.FromArgb(50, 51, 57);
             TextBox.ForeColor = Color.FromArgb(230, 230, 230);
@@ -307,13 +371,13 @@ namespace DiscordColorMessageMaker
             MadeLabel.ForeColor = Color.FromArgb(230, 230, 230);
             EmailLabel.ForeColor = Color.FromArgb(230, 230, 230);
             DiscordLabel.ForeColor = Color.FromArgb(230, 230, 230);
-            LightThemeBtn.Visible = false;                  // Light 버튼 숨김
-            DarkThemeBtn.Visible = true;                    // Dark 버튼 표시
+            LightThemeBtn.Visible = false;
+            DarkThemeBtn.Visible = true;
         }
 
         private void DarkThemeBtnClick(object sender, EventArgs e)
         {
-            // 어두운 모드 → 밝은 모드로 전환
+            // 어둠→밝
             this.BackColor = Color.FromArgb(251, 251, 251);
             TextBox.BackColor = Color.FromArgb(251, 251, 251);
             TextBox.ForeColor = Color.FromArgb(20, 20, 20);
@@ -322,9 +386,8 @@ namespace DiscordColorMessageMaker
             MadeLabel.ForeColor = Color.FromArgb(20, 20, 20);
             EmailLabel.ForeColor = Color.FromArgb(20, 20, 20);
             DiscordLabel.ForeColor = Color.FromArgb(20, 20, 20);
-            DarkThemeBtn.Visible = false;                    // Dark 버튼 숨김
-            LightThemeBtn.Visible = true;                    // Light 버튼 표시
+            DarkThemeBtn.Visible = false;
+            LightThemeBtn.Visible = true;
         }
-
     }
 }
