@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -13,12 +14,10 @@ namespace DiscordColorMessageMaker
         bool isUnderline = false;
 
         private static bool HasColor(AnsiState s) => s.Fg.HasValue || s.Bg.HasValue;
-        // 현재 상태에서 전경/배경색 구성요소가 다음 상태에서 사라지는지(부분 해제)
+        // 현재 TextStyle에 배경/글자 색이 있는가.
         private static bool LosingColorComponent(AnsiState cur, AnsiState next) =>
             (cur.Fg.HasValue && !next.Fg.HasValue) ||
             (cur.Bg.HasValue && !next.Bg.HasValue);
-
-
 
         string CMcode = "";
         string DcCM = "";
@@ -30,7 +29,7 @@ namespace DiscordColorMessageMaker
         private record struct AnsiState(bool Bold, bool Under, int? Fg, int? Bg);
         private AnsiState _state = new(false, false, null, null);
         private readonly List<(int pos, AnsiState state)> _marks = new();
-     
+
 
         public Form1()
         {
@@ -105,7 +104,7 @@ namespace DiscordColorMessageMaker
             UpdatePreviewNow();
         }
 
-        // ====== 시각 서식 업데이트 (RTB에 보이는 용도) ======
+        // ======　보이는 용도) ======
         private void TextStyleUpdate()
         {
             Font crntFont = TextBox.SelectionFont ?? TextBox.Font;
@@ -335,6 +334,7 @@ namespace DiscordColorMessageMaker
                 UpdatePreviewNow();
 
             Clipboard.SetText(DcCM, TextDataFormat.UnicodeText);
+            MessageBox.Show("복사 완료! 디스코드에 ");
         }
 
         // ====== 초기화 버튼 ======
@@ -388,6 +388,28 @@ namespace DiscordColorMessageMaker
             DiscordLabel.ForeColor = Color.FromArgb(20, 20, 20);
             DarkThemeBtn.Visible = false;
             LightThemeBtn.Visible = true;
+        }
+
+        // 안내창 닫기
+        private void InstructionClick(object sender, EventArgs e)
+        {
+            InstructionPic.Visible = false;
+        }
+        private void ServerInv(object sender, EventArgs e)
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "https://discord.gg/sXNQBhGSwr",
+                    UseShellExecute = true   // ← 중요! OS가 기본 브라우저로 실행하도록
+                };
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"링크를 여는 중 오류 발생: {ex.Message}");
+            }
         }
     }
 }

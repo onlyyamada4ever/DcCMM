@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             TextBox = new RichTextBox();
             GreyBtn = new Button();
             DeepTealBgBtn = new Button();
@@ -57,6 +58,9 @@
             DefaultBtn = new Button();
             DefaultBgBtn = new Button();
             DcCMOutput = new RichTextBox();
+            InstructionPic = new PictureBox();
+            button1 = new Button();
+            ((System.ComponentModel.ISupportInitialize)InstructionPic).BeginInit();
             SuspendLayout();
             // 
             // TextBox
@@ -171,7 +175,7 @@
             // WhiteBtn
             // 
             WhiteBtn.BackColor = Color.Black;
-            WhiteBtn.Font = new Font("Malgun Gothic", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            WhiteBtn.Font = new Font("맑은 고딕", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             WhiteBtn.ForeColor = Color.FromArgb(248, 245, 242);
             WhiteBtn.Location = new Point(614, 12);
             WhiteBtn.Name = "WhiteBtn";
@@ -216,7 +220,7 @@
             // 
             // YellowBtn
             // 
-            YellowBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            YellowBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             YellowBtn.ForeColor = Color.FromArgb(181, 137, 0);
             YellowBtn.Location = new Point(270, 12);
             YellowBtn.Name = "YellowBtn";
@@ -228,7 +232,7 @@
             // 
             // GreenBtn
             // 
-            GreenBtn.Font = new Font("Malgun Gothic", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            GreenBtn.Font = new Font("맑은 고딕", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             GreenBtn.ForeColor = Color.FromArgb(141, 161, 24);
             GreenBtn.Location = new Point(184, 12);
             GreenBtn.Name = "GreenBtn";
@@ -279,7 +283,7 @@
             // BoldChkBox
             // 
             BoldChkBox.AutoSize = true;
-            BoldChkBox.Font = new Font("Malgun Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            BoldChkBox.Font = new Font("맑은 고딕", 9F, FontStyle.Bold, GraphicsUnit.Point, 129);
             BoldChkBox.Location = new Point(783, 49);
             BoldChkBox.Name = "BoldChkBox";
             BoldChkBox.Size = new Size(52, 19);
@@ -291,7 +295,7 @@
             // UndlChkBox
             // 
             UndlChkBox.AutoSize = true;
-            UndlChkBox.Font = new Font("Malgun Gothic", 9F, FontStyle.Underline, GraphicsUnit.Point, 129);
+            UndlChkBox.Font = new Font("맑은 고딕", 9F, FontStyle.Underline, GraphicsUnit.Point, 129);
             UndlChkBox.Location = new Point(783, 74);
             UndlChkBox.Name = "UndlChkBox";
             UndlChkBox.Size = new Size(77, 19);
@@ -302,7 +306,7 @@
             // 
             // ClrBtn
             // 
-            ClrBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            ClrBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             ClrBtn.Location = new Point(1000, 74);
             ClrBtn.Name = "ClrBtn";
             ClrBtn.Size = new Size(83, 23);
@@ -313,7 +317,7 @@
             // 
             // CopyBtn
             // 
-            CopyBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            CopyBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             CopyBtn.Location = new Point(1089, 74);
             CopyBtn.Name = "CopyBtn";
             CopyBtn.Size = new Size(83, 23);
@@ -324,7 +328,7 @@
             // 
             // DarkThemeBtn
             // 
-            DarkThemeBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            DarkThemeBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             DarkThemeBtn.Location = new Point(911, 74);
             DarkThemeBtn.Name = "DarkThemeBtn";
             DarkThemeBtn.Size = new Size(83, 23);
@@ -335,7 +339,7 @@
             // 
             // LightThemeBtn
             // 
-            LightThemeBtn.Font = new Font("Malgun Gothic Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            LightThemeBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             LightThemeBtn.Location = new Point(910, 74);
             LightThemeBtn.Name = "LightThemeBtn";
             LightThemeBtn.Size = new Size(83, 23);
@@ -347,7 +351,7 @@
             // DefaultBtn
             // 
             DefaultBtn.BackColor = Color.White;
-            DefaultBtn.Font = new Font("Malgun Gothic", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            DefaultBtn.Font = new Font("맑은 고딕", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             DefaultBtn.ForeColor = Color.Black;
             DefaultBtn.Location = new Point(697, 12);
             DefaultBtn.Name = "DefaultBtn";
@@ -377,12 +381,34 @@
             DcCMOutput.TabIndex = 31;
             DcCMOutput.Text = "";
             // 
+            // InstructionPic
+            // 
+            InstructionPic.Image = (Image)resources.GetObject("InstructionPic.Image");
+            InstructionPic.Location = new Point(0, 3);
+            InstructionPic.Name = "InstructionPic";
+            InstructionPic.Size = new Size(1182, 770);
+            InstructionPic.TabIndex = 32;
+            InstructionPic.TabStop = false;
+            InstructionPic.Click += InstructionClick;
+            // 
+            // button1
+            // 
+            button1.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            button1.Location = new Point(930, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(136, 19);
+            button1.TabIndex = 33;
+            button1.Text = "Join official discord server";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += ServerInv;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(251, 251, 251);
             ClientSize = new Size(1176, 766);
+            Controls.Add(InstructionPic);
             Controls.Add(DcCMOutput);
             Controls.Add(DefaultBgBtn);
             Controls.Add(DefaultBtn);
@@ -412,8 +438,10 @@
             Controls.Add(DeepTealBgBtn);
             Controls.Add(GreyBtn);
             Controls.Add(TextBox);
+            Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)InstructionPic).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -449,5 +477,7 @@
         private Button DefaultBtn;
         private Button DefaultBgBtn;
         private RichTextBox DcCMOutput;
+        private PictureBox InstructionPic;
+        private Button button1;
     }
 }
