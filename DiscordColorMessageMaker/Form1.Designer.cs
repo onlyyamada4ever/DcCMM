@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             TextBox = new RichTextBox();
             GreyBtn = new Button();
             DeepTealBgBtn = new Button();
@@ -408,9 +409,10 @@
             // 
             // InstructionPic
             // 
-            InstructionPic.Location = new Point(270, 375);
+            InstructionPic.BackgroundImage = (Image)resources.GetObject("InstructionPic.BackgroundImage");
+            InstructionPic.Location = new Point(2, -2);
             InstructionPic.Name = "InstructionPic";
-            InstructionPic.Size = new Size(100, 50);
+            InstructionPic.Size = new Size(1184, 788);
             InstructionPic.TabIndex = 34;
             InstructionPic.TabStop = false;
             InstructionPic.Click += InstructionClick;
@@ -422,6 +424,7 @@
             BackColor = Color.FromArgb(251, 251, 251);
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1176, 766);
+            Controls.Add(InstructionPic);
             Controls.Add(DcCMOutput);
             Controls.Add(DefaultBgBtn);
             Controls.Add(DefaultBtn);
@@ -451,7 +454,6 @@
             Controls.Add(DeepTealBgBtn);
             Controls.Add(GreyBtn);
             Controls.Add(TextBox);
-            Controls.Add(InstructionPic);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
