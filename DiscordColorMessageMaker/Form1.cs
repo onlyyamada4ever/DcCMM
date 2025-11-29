@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace DiscordColorMessageMaker
 {
@@ -30,9 +31,41 @@ namespace DiscordColorMessageMaker
         private AnsiState _state = new(false, false, null, null);
         private readonly List<(int pos, AnsiState state)> _marks = new();
 
+        // ===== 타이틀바 다크모드용 Win32 API =====
+        [DllImport("Dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(
+            IntPtr hwnd,
+            int attr,
+            ref int attrValue,
+            int attrSize);
+
+        // Windows 버전에 따라 19/20 둘 다 시도하는 게 안전함
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
+        private void SetTitleBarDark(bool enable)
+        {
+            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+                return; // Win10 1809 미만이면 지원 X
+
+            int value = enable ? 1 : 0;
+
+            // 새 값(20) 먼저 시도
+            DwmSetWindowAttribute(this.Handle,
+                DWMWA_USE_IMMERSIVE_DARK_MODE,
+                ref value,
+                sizeof(int));
+
+            // 구버전(19)도 함께 시도
+            DwmSetWindowAttribute(this.Handle,
+                DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1,
+                ref value,
+                sizeof(int));
+        }
 
         public Form1()
         {
+            SetTitleBarDark(false);
             InitializeComponent();
 
             // 실시간 미리보기(입력/선택 변화)
@@ -334,7 +367,7 @@ namespace DiscordColorMessageMaker
                 UpdatePreviewNow();
 
             Clipboard.SetText(DcCM, TextDataFormat.UnicodeText);
-            MessageBox.Show("복사 완료! 디스코드에 ");
+            MessageBox.Show("복사 완료! 디스코드에 붙여넣기 해 주세요.");
         }
 
         // ====== 초기화 버튼 ======
@@ -362,30 +395,112 @@ namespace DiscordColorMessageMaker
         // ====== 테마 전환 ======
         private void LightThemeBtnClick(object sender, EventArgs e)
         {
-            // 밝→어둠
+            // 라이트모드 -> 다크모드
+            // 50,51,57
+            // 223 224 226
+
             this.BackColor = Color.FromArgb(50, 51, 57);
             TextBox.BackColor = Color.FromArgb(50, 51, 57);
             TextBox.ForeColor = Color.FromArgb(230, 230, 230);
             DcCMOutput.BackColor = Color.FromArgb(50, 51, 57);
             DcCMOutput.ForeColor = Color.FromArgb(230, 230, 230);
+
             MadeLabel.ForeColor = Color.FromArgb(230, 230, 230);
             EmailLabel.ForeColor = Color.FromArgb(230, 230, 230);
             DiscordLabel.ForeColor = Color.FromArgb(230, 230, 230);
+
+            BoldChkBox.ForeColor = Color.FromArgb(223, 224, 226);
+            UndlChkBox.ForeColor = Color.FromArgb(223, 224, 226);
+
+            GreyBtn.BackColor = Color.FromArgb(50, 51, 57);
+            RedBtn.BackColor = Color.FromArgb(50, 51, 57);
+            GreenBtn.BackColor = Color.FromArgb(50, 51, 57);
+            YellowBtn.BackColor = Color.FromArgb(50, 51, 57);
+            BlueBtn.BackColor = Color.FromArgb(50, 51, 57);
+            PinkBtn.BackColor = Color.FromArgb(50, 51, 57);
+            TealBtn.BackColor = Color.FromArgb(50, 51, 57);
+            WhiteBtn.BackColor = Color.FromArgb(50, 51, 57);
+            WhiteBtn.ForeColor = Color.FromArgb(255, 255, 255);
+            DefaultBtn.BackColor = Color.FromArgb(50, 51, 57);
+            DefaultBtn.ForeColor = Color.FromArgb(223, 224, 226);
+
+            DeepTealBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            OrangeBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            Grey1BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            Grey2BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            Grey3BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            BlurpleBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            Grey4BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            WarmIvoryBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+            DefaultBgBtn.BackColor = Color.FromArgb(50, 51, 57);
+            DefaultBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
+
+            DarkThemeBtn.BackColor = Color.FromArgb(50, 51, 57);
+            DarkThemeBtn.ForeColor = Color.FromArgb(223, 224, 226);
+
+            ClrBtn.BackColor = Color.FromArgb(50, 51, 57);
+            ClrBtn.ForeColor = Color.FromArgb(223, 224, 226);
+
+            CopyBtn.BackColor = Color.FromArgb(50, 51, 57);
+            CopyBtn.ForeColor = Color.FromArgb(223, 224, 226);
+
+            SetTitleBarDark(true);
+
             LightThemeBtn.Visible = false;
             DarkThemeBtn.Visible = true;
         }
 
         private void DarkThemeBtnClick(object sender, EventArgs e)
         {
-            // 어둠→밝
+            // 다크모드 -> 라이트모드
+            // 251 251 251
+            // 50 51 57
             this.BackColor = Color.FromArgb(251, 251, 251);
             TextBox.BackColor = Color.FromArgb(251, 251, 251);
-            TextBox.ForeColor = Color.FromArgb(20, 20, 20);
+            TextBox.ForeColor = Color.FromArgb(50, 51, 57);
             DcCMOutput.BackColor = Color.FromArgb(251, 251, 251);
-            DcCMOutput.ForeColor = Color.FromArgb(20, 20, 20);
-            MadeLabel.ForeColor = Color.FromArgb(20, 20, 20);
-            EmailLabel.ForeColor = Color.FromArgb(20, 20, 20);
-            DiscordLabel.ForeColor = Color.FromArgb(20, 20, 20);
+            DcCMOutput.ForeColor = Color.FromArgb(50, 51, 57);
+
+            MadeLabel.ForeColor = Color.FromArgb(50, 51, 57);
+            EmailLabel.ForeColor = Color.FromArgb(50, 51, 57);
+            DiscordLabel.ForeColor = Color.FromArgb(50, 51, 57);
+
+            BoldChkBox.ForeColor = Color.FromArgb(50, 51, 57);
+            UndlChkBox.ForeColor = Color.FromArgb(50, 51, 57);
+
+            GreyBtn.BackColor = Color.FromArgb(251, 251, 251);
+            RedBtn.BackColor = Color.FromArgb(251, 251, 251);
+            GreenBtn.BackColor = Color.FromArgb(251, 251, 251);
+            YellowBtn.BackColor = Color.FromArgb(251, 251, 251);
+            BlueBtn.BackColor = Color.FromArgb(251, 251, 251);
+            PinkBtn.BackColor = Color.FromArgb(251, 251, 251);
+            TealBtn.BackColor = Color.FromArgb(251, 251, 251);
+            WhiteBtn.BackColor = Color.FromArgb(251, 251, 251);
+            WhiteBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            DefaultBtn.BackColor = Color.FromArgb(251, 251, 251);
+            DefaultBtn.ForeColor = Color.FromArgb(50, 51, 57);
+
+            OrangeBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            Grey1BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            Grey2BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            Grey3BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            BlurpleBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            Grey4BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            WarmIvoryBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+            DefaultBgBtn.BackColor = Color.FromArgb(251, 251, 251);
+            DefaultBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
+
+            DarkThemeBtn.BackColor = Color.FromArgb(50, 51, 57);
+            DarkThemeBtn.ForeColor = Color.FromArgb(223, 224, 226);
+
+            ClrBtn.BackColor = Color.FromArgb(251, 251, 251);
+            ClrBtn.ForeColor = Color.FromArgb(50, 51, 57);
+
+            CopyBtn.BackColor = Color.FromArgb(251, 251, 251);
+            CopyBtn.ForeColor = Color.FromArgb(50, 51, 57);
+
+            SetTitleBarDark(false);
+
             DarkThemeBtn.Visible = false;
             LightThemeBtn.Visible = true;
         }
@@ -395,20 +510,42 @@ namespace DiscordColorMessageMaker
         {
             InstructionPic.Visible = false;
         }
-        private void ServerInv(object sender, EventArgs e)
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // 장실좀
+        }
+
+        private void ServerInvClick(object sender, EventArgs e)
         {
             try
             {
                 var psi = new ProcessStartInfo
                 {
                     FileName = "https://discord.gg/sXNQBhGSwr",
-                    UseShellExecute = true   // ← 중요! OS가 기본 브라우저로 실행하도록
+                    UseShellExecute = true
                 };
                 Process.Start(psi);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"링크를 여는 중 오류 발생: {ex.Message}");
+                MessageBox.Show($"링크를 열 수 없습니다. 다시 시도해주세요.");
+            }
+        }
+        private void EmailLabel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "https://mail.google.com/mail/",
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"링크를 열 수 없습니다. 다시 시도해주세요.");
             }
         }
     }

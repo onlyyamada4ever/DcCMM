@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             TextBox = new RichTextBox();
             GreyBtn = new Button();
             DeepTealBgBtn = new Button();
@@ -59,13 +58,13 @@
             DefaultBgBtn = new Button();
             DcCMOutput = new RichTextBox();
             InstructionPic = new PictureBox();
-            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)InstructionPic).BeginInit();
             SuspendLayout();
             // 
             // TextBox
             // 
             TextBox.BackColor = SystemColors.Window;
+            TextBox.BorderStyle = BorderStyle.FixedSingle;
             TextBox.Location = new Point(12, 99);
             TextBox.Name = "TextBox";
             TextBox.Size = new Size(892, 655);
@@ -74,6 +73,7 @@
             // 
             // GreyBtn
             // 
+            GreyBtn.FlatStyle = FlatStyle.Popup;
             GreyBtn.ForeColor = Color.FromArgb(79, 84, 92);
             GreyBtn.Location = new Point(12, 12);
             GreyBtn.Name = "GreyBtn";
@@ -86,6 +86,7 @@
             // DeepTealBgBtn
             // 
             DeepTealBgBtn.BackColor = Color.FromArgb(0, 43, 54);
+            DeepTealBgBtn.FlatStyle = FlatStyle.Popup;
             DeepTealBgBtn.ForeColor = Color.White;
             DeepTealBgBtn.Location = new Point(12, 43);
             DeepTealBgBtn.Name = "DeepTealBgBtn";
@@ -98,6 +99,7 @@
             // BlurpleBgBtn
             // 
             BlurpleBgBtn.BackColor = Color.FromArgb(108, 113, 196);
+            BlurpleBgBtn.FlatStyle = FlatStyle.Popup;
             BlurpleBgBtn.Location = new Point(442, 43);
             BlurpleBgBtn.Name = "BlurpleBgBtn";
             BlurpleBgBtn.Size = new Size(80, 50);
@@ -109,6 +111,7 @@
             // Grey3BgBtn
             // 
             Grey3BgBtn.BackColor = Color.FromArgb(131, 148, 150);
+            Grey3BgBtn.FlatStyle = FlatStyle.Popup;
             Grey3BgBtn.Location = new Point(356, 43);
             Grey3BgBtn.Name = "Grey3BgBtn";
             Grey3BgBtn.Size = new Size(80, 50);
@@ -120,6 +123,7 @@
             // Grey2BgBtn
             // 
             Grey2BgBtn.BackColor = Color.FromArgb(101, 123, 131);
+            Grey2BgBtn.FlatStyle = FlatStyle.Popup;
             Grey2BgBtn.Location = new Point(270, 43);
             Grey2BgBtn.Name = "Grey2BgBtn";
             Grey2BgBtn.Size = new Size(80, 50);
@@ -131,6 +135,7 @@
             // Grey1BgBtn
             // 
             Grey1BgBtn.BackColor = Color.FromArgb(88, 110, 117);
+            Grey1BgBtn.FlatStyle = FlatStyle.Popup;
             Grey1BgBtn.Location = new Point(184, 43);
             Grey1BgBtn.Name = "Grey1BgBtn";
             Grey1BgBtn.Size = new Size(80, 50);
@@ -142,6 +147,7 @@
             // OrangeBgBtn
             // 
             OrangeBgBtn.BackColor = Color.FromArgb(203, 75, 22);
+            OrangeBgBtn.FlatStyle = FlatStyle.Popup;
             OrangeBgBtn.Location = new Point(98, 43);
             OrangeBgBtn.Name = "OrangeBgBtn";
             OrangeBgBtn.Size = new Size(80, 50);
@@ -153,6 +159,7 @@
             // Grey4BgBtn
             // 
             Grey4BgBtn.BackColor = Color.FromArgb(147, 161, 161);
+            Grey4BgBtn.FlatStyle = FlatStyle.Popup;
             Grey4BgBtn.Location = new Point(528, 43);
             Grey4BgBtn.Name = "Grey4BgBtn";
             Grey4BgBtn.Size = new Size(80, 50);
@@ -164,6 +171,7 @@
             // WarmIvoryBgBtn
             // 
             WarmIvoryBgBtn.BackColor = Color.FromArgb(253, 246, 227);
+            WarmIvoryBgBtn.FlatStyle = FlatStyle.Popup;
             WarmIvoryBgBtn.Location = new Point(614, 43);
             WarmIvoryBgBtn.Name = "WarmIvoryBgBtn";
             WarmIvoryBgBtn.Size = new Size(80, 50);
@@ -174,9 +182,10 @@
             // 
             // WhiteBtn
             // 
-            WhiteBtn.BackColor = Color.Black;
+            WhiteBtn.BackColor = Color.White;
+            WhiteBtn.FlatStyle = FlatStyle.Popup;
             WhiteBtn.Font = new Font("맑은 고딕", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            WhiteBtn.ForeColor = Color.FromArgb(248, 245, 242);
+            WhiteBtn.ForeColor = Color.Black;
             WhiteBtn.Location = new Point(614, 12);
             WhiteBtn.Name = "WhiteBtn";
             WhiteBtn.Size = new Size(80, 25);
@@ -187,6 +196,7 @@
             // 
             // TealBtn
             // 
+            TealBtn.FlatStyle = FlatStyle.Popup;
             TealBtn.ForeColor = Color.FromArgb(42, 161, 152);
             TealBtn.Location = new Point(528, 12);
             TealBtn.Name = "TealBtn";
@@ -198,6 +208,7 @@
             // 
             // PinkBtn
             // 
+            PinkBtn.FlatStyle = FlatStyle.Popup;
             PinkBtn.ForeColor = Color.FromArgb(211, 54, 130);
             PinkBtn.Location = new Point(442, 12);
             PinkBtn.Name = "PinkBtn";
@@ -209,6 +220,7 @@
             // 
             // BlueBtn
             // 
+            BlueBtn.FlatStyle = FlatStyle.Popup;
             BlueBtn.ForeColor = Color.FromArgb(38, 139, 210);
             BlueBtn.Location = new Point(356, 12);
             BlueBtn.Name = "BlueBtn";
@@ -220,6 +232,7 @@
             // 
             // YellowBtn
             // 
+            YellowBtn.FlatStyle = FlatStyle.Popup;
             YellowBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             YellowBtn.ForeColor = Color.FromArgb(181, 137, 0);
             YellowBtn.Location = new Point(270, 12);
@@ -232,6 +245,7 @@
             // 
             // GreenBtn
             // 
+            GreenBtn.FlatStyle = FlatStyle.Popup;
             GreenBtn.Font = new Font("맑은 고딕", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             GreenBtn.ForeColor = Color.FromArgb(141, 161, 24);
             GreenBtn.Location = new Point(184, 12);
@@ -244,6 +258,7 @@
             // 
             // RedBtn
             // 
+            RedBtn.FlatStyle = FlatStyle.Popup;
             RedBtn.ForeColor = Color.FromArgb(220, 50, 47);
             RedBtn.Location = new Point(98, 12);
             RedBtn.Name = "RedBtn";
@@ -261,6 +276,7 @@
             EmailLabel.Size = new Size(212, 15);
             EmailLabel.TabIndex = 17;
             EmailLabel.Text = "Email - onlyyamada4ever@gmail.com";
+            EmailLabel.Click += EmailLabel_Click;
             // 
             // MadeLabel
             // 
@@ -279,6 +295,7 @@
             DiscordLabel.Size = new Size(211, 15);
             DiscordLabel.TabIndex = 19;
             DiscordLabel.Text = " Discord - @dancin_in_the_moonlight";
+            DiscordLabel.Click += ServerInvClick;
             // 
             // BoldChkBox
             // 
@@ -306,6 +323,7 @@
             // 
             // ClrBtn
             // 
+            ClrBtn.FlatStyle = FlatStyle.Flat;
             ClrBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             ClrBtn.Location = new Point(1000, 74);
             ClrBtn.Name = "ClrBtn";
@@ -317,6 +335,7 @@
             // 
             // CopyBtn
             // 
+            CopyBtn.FlatStyle = FlatStyle.Flat;
             CopyBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             CopyBtn.Location = new Point(1089, 74);
             CopyBtn.Name = "CopyBtn";
@@ -328,8 +347,9 @@
             // 
             // DarkThemeBtn
             // 
+            DarkThemeBtn.FlatStyle = FlatStyle.Flat;
             DarkThemeBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            DarkThemeBtn.Location = new Point(911, 74);
+            DarkThemeBtn.Location = new Point(910, 74);
             DarkThemeBtn.Name = "DarkThemeBtn";
             DarkThemeBtn.Size = new Size(83, 23);
             DarkThemeBtn.TabIndex = 26;
@@ -339,6 +359,7 @@
             // 
             // LightThemeBtn
             // 
+            LightThemeBtn.FlatStyle = FlatStyle.Flat;
             LightThemeBtn.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             LightThemeBtn.Location = new Point(910, 74);
             LightThemeBtn.Name = "LightThemeBtn";
@@ -351,6 +372,8 @@
             // DefaultBtn
             // 
             DefaultBtn.BackColor = Color.White;
+            DefaultBtn.BackgroundImageLayout = ImageLayout.None;
+            DefaultBtn.FlatStyle = FlatStyle.Popup;
             DefaultBtn.Font = new Font("맑은 고딕", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
             DefaultBtn.ForeColor = Color.Black;
             DefaultBtn.Location = new Point(697, 12);
@@ -364,6 +387,7 @@
             // DefaultBgBtn
             // 
             DefaultBgBtn.BackColor = Color.White;
+            DefaultBgBtn.FlatStyle = FlatStyle.Popup;
             DefaultBgBtn.Location = new Point(697, 43);
             DefaultBgBtn.Name = "DefaultBgBtn";
             DefaultBgBtn.Size = new Size(80, 50);
@@ -374,6 +398,7 @@
             // 
             // DcCMOutput
             // 
+            DcCMOutput.BorderStyle = BorderStyle.FixedSingle;
             DcCMOutput.Location = new Point(910, 99);
             DcCMOutput.Name = "DcCMOutput";
             DcCMOutput.ReadOnly = true;
@@ -383,32 +408,20 @@
             // 
             // InstructionPic
             // 
-            InstructionPic.Image = (Image)resources.GetObject("InstructionPic.Image");
-            InstructionPic.Location = new Point(0, 3);
+            InstructionPic.Location = new Point(270, 375);
             InstructionPic.Name = "InstructionPic";
-            InstructionPic.Size = new Size(1182, 770);
-            InstructionPic.TabIndex = 32;
+            InstructionPic.Size = new Size(100, 50);
+            InstructionPic.TabIndex = 34;
             InstructionPic.TabStop = false;
             InstructionPic.Click += InstructionClick;
-            // 
-            // button1
-            // 
-            button1.Font = new Font("맑은 고딕 Semilight", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            button1.Location = new Point(930, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(136, 19);
-            button1.TabIndex = 33;
-            button1.Text = "Join official discord server";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += ServerInv;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(251, 251, 251);
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1176, 766);
-            Controls.Add(InstructionPic);
             Controls.Add(DcCMOutput);
             Controls.Add(DefaultBgBtn);
             Controls.Add(DefaultBtn);
@@ -438,9 +451,10 @@
             Controls.Add(DeepTealBgBtn);
             Controls.Add(GreyBtn);
             Controls.Add(TextBox);
-            Controls.Add(button1);
+            Controls.Add(InstructionPic);
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)InstructionPic).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -478,6 +492,5 @@
         private Button DefaultBgBtn;
         private RichTextBox DcCMOutput;
         private PictureBox InstructionPic;
-        private Button button1;
     }
 }
