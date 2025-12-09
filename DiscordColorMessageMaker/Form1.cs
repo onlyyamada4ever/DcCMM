@@ -39,7 +39,7 @@ namespace DiscordColorMessageMaker
             ref int attrValue,
             int attrSize);
 
-        // Windows 버전에 따라 19/20 둘 다 시도하는 게 안전함
+        // Windows 버전에 따라 19/20 둘 다 시도
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
@@ -74,7 +74,6 @@ namespace DiscordColorMessageMaker
 
             // 시작 시 0 위치에 현재 상태를 하나 박아두기
             AddMarkAtCaret(forcePos: 0);
-
             UpdatePreviewNow();
         }
 
@@ -349,7 +348,7 @@ namespace DiscordColorMessageMaker
         }
 
 
-        // ====== 미리보기 업데이트 ======
+        // ====== 미리보기 실시간 업데이트 ======
         private void UpdatePreviewNow()
         {
             string content = TextBox.Text;
@@ -510,8 +509,8 @@ namespace DiscordColorMessageMaker
         {
             InstructionPic.Visible = false;
         }
-        // 
-
+        
+        // 서버 초대 버튼 (디스코드 텍스트 클릭시 초대장 전송)
         private void ServerInvClick(object sender, EventArgs e)
         {
             try
@@ -528,6 +527,9 @@ namespace DiscordColorMessageMaker
                 MessageBox.Show($"링크를 열 수 없습니다. 다시 시도해주세요.");
             }
         }
+
+        // 이메일로 이동 (이메일 텍스트 클릭시 지메일 오픈)
+        // 추후에 윈도우 기본 설정 메일 앱/사이트로 경로 변경할계획
         private void EmailLabel_Click(object sender, EventArgs e)
         {
             try
