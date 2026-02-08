@@ -10,13 +10,12 @@ namespace DiscordColorMessageMaker
 {
     public partial class Form1 : Form
     {
-        // ƒøπ‘øÎ
-        // ===== ªÛ≈¬ ∫Øºˆ =====
+        // ===== ÏÉÅÌÉú Î≥ÄÏàò =====
         bool isBold = false;
         bool isUnderline = false;
 
         private static bool HasColor(AnsiState s) => s.Fg.HasValue || s.Bg.HasValue;
-        // «ˆ¿Á TextStyleø° πË∞Ê/±€¿⁄ ªˆ¿Ã ¿÷¥¬∞°.
+        // ÌòÑÏû¨ TextStyleÏóê Î∞∞Í≤Ω/Í∏ÄÏûê ÏÉâÏù¥ ÏûàÎäîÍ∞Ä.
         private static bool LosingColorComponent(AnsiState cur, AnsiState next) =>
             (cur.Fg.HasValue && !next.Fg.HasValue) ||
             (cur.Bg.HasValue && !next.Bg.HasValue);
@@ -26,13 +25,13 @@ namespace DiscordColorMessageMaker
         string TextColor = "Default";
         string BgColor = "Default";
 
-        // ===== ∏∂ƒø ±‚π› ANSI ªÛ≈¬ =====
-        // record struct ∑Œ º±æ«œø© Nullable<AnsiState> ªÁøÎ ∞°¥…(.Value OK)
+        // ===== ÎßàÏª§ Í∏∞Î∞ò ANSI ÏÉÅÌÉú =====
+        // record struct Î°ú ÏÑ†Ïñ∏ÌïòÏó¨ Nullable<AnsiState> ÏÇ¨Ïö© Í∞ÄÎä•(.Value OK)
         private record struct AnsiState(bool Bold, bool Under, int? Fg, int? Bg);
         private AnsiState _state = new(false, false, null, null);
         private readonly List<(int pos, AnsiState state)> _marks = new();
 
-        // ===== ≈∏¿Ã∆≤πŸ ¥Ÿ≈©∏µÂøÎ Win32 API =====
+        // ===== ÌÉÄÏù¥ÌãÄÎ∞î Îã§ÌÅ¨Î™®ÎìúÏö© Win32 API =====
         [DllImport("Dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(
             IntPtr hwnd,
@@ -40,24 +39,24 @@ namespace DiscordColorMessageMaker
             ref int attrValue,
             int attrSize);
 
-        // Windows πˆ¿¸ø° µ˚∂Û 19/20 µ— ¥Ÿ Ω√µµ«œ¥¬ ∞‘ æ»¿¸«‘
+        // Windows Î≤ÑÏ†ÑÏóê Îî∞Îùº 19/20 Îëò Îã§ ÏãúÎèÑ
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
         private void SetTitleBarDark(bool enable)
         {
             if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-                return; // Win10 1809 πÃ∏∏¿Ã∏È ¡ˆø¯ X
+                return; // Win10 1809 ÎØ∏ÎßåÏù¥Î©¥ ÏßÄÏõê X
 
             int value = enable ? 1 : 0;
 
-            // ªı ∞™(20) ∏’¿˙ Ω√µµ
+            // ÏÉà Í∞í(20) Î®ºÏ†Ä ÏãúÎèÑ
             DwmSetWindowAttribute(this.Handle,
                 DWMWA_USE_IMMERSIVE_DARK_MODE,
                 ref value,
                 sizeof(int));
 
-            // ±∏πˆ¿¸(19)µµ «‘≤≤ Ω√µµ
+            // Íµ¨Î≤ÑÏ†Ñ(19)ÎèÑ Ìï®Íªò ÏãúÎèÑ
             DwmSetWindowAttribute(this.Handle,
                 DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1,
                 ref value,
@@ -69,13 +68,12 @@ namespace DiscordColorMessageMaker
             SetTitleBarDark(false);
             InitializeComponent();
 
-            // Ω«Ω√∞£ πÃ∏Æ∫∏±‚(¿‘∑¬/º±≈√ ∫Ø»≠)
+            // Ïã§ÏãúÍ∞Ñ ÎØ∏Î¶¨Î≥¥Í∏∞(ÏûÖÎ†•/ÏÑ†ÌÉù Î≥ÄÌôî)
             TextBox.TextChanged += (s, e) => UpdatePreviewNow();
             TextBox.SelectionChanged += (s, e) => UpdatePreviewNow();
 
-            // Ω√¿€ Ω√ 0 ¿ßƒ°ø° «ˆ¿Á ªÛ≈¬∏¶ «œ≥™ π⁄æ∆µŒ±‚
+            // ÏãúÏûë Ïãú 0 ÏúÑÏπòÏóê ÌòÑÏû¨ ÏÉÅÌÉúÎ•º ÌïòÎÇò Î∞ïÏïÑÎëêÍ∏∞
             AddMarkAtCaret(forcePos: 0);
-
             UpdatePreviewNow();
         }
 
@@ -84,8 +82,8 @@ namespace DiscordColorMessageMaker
         {
             isBold = BoldChkBox.Checked;
             _state = _state with { Bold = isBold };
-            AddMarkAtCaret();          // ƒøº≠ ¿ßƒ°ø° ∏∂ƒø
-            TextStyleUpdate();         // RTB Ω√∞¢ º≠Ωƒ
+            AddMarkAtCaret();          // Ïª§ÏÑú ÏúÑÏπòÏóê ÎßàÏª§
+            TextStyleUpdate();         // RTB ÏãúÍ∞Å ÏÑúÏãù
             UpdatePreviewNow();
         }
 
@@ -98,7 +96,7 @@ namespace DiscordColorMessageMaker
             UpdatePreviewNow();
         }
 
-        // ====== ±€¿⁄ªˆ πˆ∆∞ ======
+        // ====== Í∏ÄÏûêÏÉâ Î≤ÑÌäº ======
         private void GreyBtn_Click(object sender, EventArgs e) { SetFg("Grey"); }
         private void RedBtn_Click(object sender, EventArgs e) { SetFg("Red"); }
         private void GreenBtn_Click(object sender, EventArgs e) { SetFg("Green"); }
@@ -114,11 +112,11 @@ namespace DiscordColorMessageMaker
             TextColor = name;
             _state = _state with { Fg = FgCodeFromName(TextColor) };
             AddMarkAtCaret();
-            TextColorUpdate(); // RTB Ω√∞¢ π›øµ
+            TextColorUpdate(); // RTB ÏãúÍ∞Å Î∞òÏòÅ
             UpdatePreviewNow();
         }
 
-        // ====== πË∞Êªˆ πˆ∆∞ ======
+        // ====== Î∞∞Í≤ΩÏÉâ Î≤ÑÌäº ======
         private void DeepTealBgBtn_Click(object sender, EventArgs e) { SetBg("Teal"); }
         private void OrangeBgBtn_Click(object sender, EventArgs e) { SetBg("Orange"); }
         private void Grey1BgBtn_Click(object sender, EventArgs e) { SetBg("Grey1"); }
@@ -134,11 +132,11 @@ namespace DiscordColorMessageMaker
             BgColor = name;
             _state = _state with { Bg = BgCodeFromName(BgColor) };
             AddMarkAtCaret();
-            TextColorUpdate(); // RTB Ω√∞¢ π›øµ
+            TextColorUpdate(); // RTB ÏãúÍ∞Å Î∞òÏòÅ
             UpdatePreviewNow();
         }
 
-        // ======°°∫∏¿Ã¥¬ øÎµµ) ======
+        // ======„ÄÄÎ≥¥Ïù¥Îäî Ïö©ÎèÑ) ======
         private void TextStyleUpdate()
         {
             Font crntFont = TextBox.SelectionFont ?? TextBox.Font;
@@ -152,7 +150,7 @@ namespace DiscordColorMessageMaker
 
         private void TextColorUpdate()
         {
-            // ±€¿⁄ªˆ(Ω√∞¢øÎ)
+            // Í∏ÄÏûêÏÉâ(ÏãúÍ∞ÅÏö©)
             TextBox.SelectionColor = TextColor switch
             {
                 "Grey" when BgColor != "Default" => Color.FromArgb(7, 54, 66),
@@ -168,7 +166,7 @@ namespace DiscordColorMessageMaker
                 _ => TextBox.ForeColor
             };
 
-            // «œ¿Ã∂Û¿Ã∆Æ(Ω√∞¢øÎ)
+            // ÌïòÏù¥ÎùºÏù¥Ìä∏(ÏãúÍ∞ÅÏö©)
             TextBox.SelectionBackColor = BgColor switch
             {
                 "Teal" => Color.FromArgb(0, 43, 54),
@@ -185,7 +183,7 @@ namespace DiscordColorMessageMaker
             TextBox.Focus();
         }
 
-        // ====== ¿Ã∏ß°ÊANSI ƒ⁄µÂ ∏≈«Œ ======
+        // ====== Ïù¥Î¶Ñ‚ÜíANSI ÏΩîÎìú Îß§Ìïë ======
         private static int? FgCodeFromName(string name) => name switch
         {
             "Grey" => 30,
@@ -223,7 +221,7 @@ namespace DiscordColorMessageMaker
             return string.Join(";", list);
         }
 
-        // ====== ƒøº≠ ¿ßƒ°ø° ∏∂ƒø √ﬂ∞° ======
+        // ====== Ïª§ÏÑú ÏúÑÏπòÏóê ÎßàÏª§ Ï∂îÍ∞Ä ======
         private void AddMarkAtCaret(int? forcePos = null)
         {
             int pos = forcePos ?? TextBox.SelectionStart;
@@ -231,323 +229,6 @@ namespace DiscordColorMessageMaker
             if (idx >= 0) _marks[idx] = (pos, _state);
             else _marks.Add((pos, _state));
             _marks.Sort((a, b) => a.pos.CompareTo(b.pos));
-        }
-
-        // ====== ANSI ∫Ø»Ø: Ω∫≈∏¿œ ¿¸»Ø √÷º“»≠ / ∫“« ø‰«— 0m ¡¶∞≈ / ¡Ÿ ≥°ø°º≠∏∏ ∏Æº¬ ======
-        private string BuildDiscordAnsiFromMarks(string content)
-        {
-            const string ESC = "\u001b";
-
-            if (_marks.Count == 0)
-                _marks.Add((0, _state));
-
-            _marks.RemoveAll(m => m.pos < 0 || m.pos > content.Length);
-            _marks.Sort((a, b) => a.pos.CompareTo(b.pos));
-
-            var sb = new StringBuilder(content.Length * 2);
-            int markIdx = 0;
-
-            AnsiState? current = null; // null = «√∑π¿Œ(æ∆π´ Ω∫≈∏¿œ æ¯¿Ω)
-
-            bool SameStyle(AnsiState? a, AnsiState? b)
-            {
-                if (a == null && b == null) return true;
-                if (a == null || b == null) return false;
-                return a.Value.Bold == b.Value.Bold &&
-                       a.Value.Under == b.Value.Under &&
-                       a.Value.Fg == b.Value.Fg &&
-                       a.Value.Bg == b.Value.Bg;
-            }
-
-            for (int i = 0; i <= content.Length; i++)
-            {
-                // i ¿ßƒ°ø° ∏∂ƒø∞° ¿÷¥Ÿ∏È ¡ÔΩ√ Ω∫≈∏¿œ ¿¸»Ø ∆«¥‹
-                while (markIdx < _marks.Count && _marks[markIdx].pos == i)
-                {
-                    var next = _marks[markIdx].state;
-
-                    if (!SameStyle(current, next))
-                    {
-                        bool nextHasAnyStyle = next.Bold || next.Under || next.Fg.HasValue || next.Bg.HasValue;
-
-                        if (current is AnsiState cur)
-                        {
-                            bool curHasAnyStyle = cur.Bold || cur.Under || cur.Fg.HasValue || cur.Bg.HasValue;
-
-                            // 1) ªˆ °Ê ªˆ æ¯¿Ω(∫ºµÂ/πÿ¡Ÿ∏∏ or øœ¿¸ «√∑π¿Œ)  ∂«¥¬
-                            // 2) ªˆ ¿œ∫Œ ¡¶∞≈(¿¸∞Ê/πË∞Ê ¡ﬂ «œ≥™∏∏ «ÿ¡¶)  °Ê  «œµÂ ∏Æº¬ »ƒ ¿Á¿˚øÎ
-                            bool needHardReset =
-                                (HasColor(cur) && !HasColor(next)) ||
-                                (HasColor(cur) && LosingColorComponent(cur, next));
-
-                            if (needHardReset)
-                            {
-                                // ªˆ¿ª »ÆΩ«»˜ ¡ˆøÚ
-                                sb.Append(ESC).Append("[0m");
-                                // ¥Ÿ¿Ω ªÛ≈¬∞° «√∑π¿Œ¿Ã æ∆¥œ∏È(∫ºµÂ/πÿ¡Ÿ/ªˆ ¡ﬂ «œ≥™∂Ûµµ ¿÷¿∏∏È) ¥ŸΩ√ ƒ‘
-                                if (nextHasAnyStyle)
-                                    sb.Append(ESC).Append('[').Append(CodesOf(next)).Append('m');
-                                current = nextHasAnyStyle ? next : (AnsiState?)null;
-                            }
-                            else
-                            {
-                                // «√∑π¿Œ¿∏∑Œ ∞°¥¬ ¥‹º¯ «ÿ¡¶(Ω∫≈∏¿œ∏∏ ≤®¡¸): 0m «— π¯
-                                if (!nextHasAnyStyle)
-                                {
-                                    if (curHasAnyStyle)
-                                    {
-                                        sb.Append(ESC).Append("[0m");
-                                        current = null;
-                                    }
-                                }
-                                else
-                                {
-                                    // ±◊ ø‹(ªˆ°Íªˆ, Ω∫≈∏¿œ ∫Ø∞Ê ∆˜«‘)¥¬ πŸ∑Œ ªı ƒ⁄µÂ
-                                    sb.Append(ESC).Append('[').Append(CodesOf(next)).Append('m');
-                                    current = next;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // «ˆ¿Á «√∑π¿Œ °Ê π´æ∞° ƒ‘
-                            if (nextHasAnyStyle)
-                            {
-                                sb.Append(ESC).Append('[').Append(CodesOf(next)).Append('m');
-                                current = next;
-                            }
-                            // «√∑π¿Œ°Ê«√∑π¿Œ ¿¸»Ø¿∫ √‚∑¬ æ¯¿Ω
-                        }
-                    }
-                    markIdx++;
-                }
-
-                if (i == content.Length) break;
-
-                char ch = content[i];
-
-                // ¡ŸπŸ≤ﬁ: ¡Ÿ ≥°ø°º≠ Ω∫≈∏¿œ¿Ã ƒ—¡Æ ¿÷¿∏∏È ¥›∞Ì ¡ŸπŸ≤ﬁ √‚∑¬
-                if (ch == '\r' || ch == '\n')
-                {
-                    if (current != null)
-                    {
-                        sb.Append(ESC).Append("[0m");
-                        current = null; // ¥Ÿ¿Ω ¡Ÿ¿∫ «√∑π¿Œ¿∏∑Œ Ω√¿€
-                    }
-                    sb.Append(ch);
-                    continue;
-                }
-
-                // ¿œπ› πÆ¿⁄
-                sb.Append(ch);
-            }
-
-            // ∆ƒ¿œ ≥°ø°º≠ Ω∫≈∏¿œ ≥≤æ∆ ¿÷¿∏∏È ¥›±‚
-            if (current != null)
-                sb.Append(ESC).Append("[0m");
-
-            return $"```ansi\n{sb}\n```";
-        }
-
-
-        // ====== πÃ∏Æ∫∏±‚ æ˜µ•¿Ã∆Æ ======
-        private void UpdatePreviewNow()
-        {
-            string content = TextBox.Text;
-            CMcode = CodesOf(_state);                 // ¬¸∞ÌøÎ(«ˆ¿Á ªÛ≈¬)
-            DcCM = BuildDiscordAnsiFromMarks(content);
-
-            if (DcCMOutput != null)
-                DcCMOutput.Text = DcCM;
-        }
-
-        // ====== ∫πªÁ πˆ∆∞ ======
-        private void CopyBtnClick(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(DcCM))
-                UpdatePreviewNow();
-
-            Clipboard.SetText(DcCM, TextDataFormat.UnicodeText);
-            MessageBox.Show("∫πªÁ øœ∑·! µΩ∫ƒ⁄µÂø° ∫Ÿø©≥÷±‚ «ÿ ¡÷ººø‰.");
-        }
-
-        // ====== √ ±‚»≠ πˆ∆∞ ======
-        private void ClearBtnClick(object sender, EventArgs e)
-        {
-            TextBox.Clear();
-            // ªÛ≈¬ √ ±‚»≠
-            isBold = false;
-            isUnderline = false;
-            TextColor = "Default";
-            BgColor = "Default";
-            _state = new(false, false, null, null);
-            _marks.Clear();
-            AddMarkAtCaret(forcePos: 0);
-
-            // √º≈©π⁄Ω∫ √ ±‚»≠
-            BoldChkBox.Checked = false;
-            UndlChkBox.Checked = false;
-
-            TextStyleUpdate();
-            TextColorUpdate();
-            UpdatePreviewNow();
-        }
-
-        // ====== ≈◊∏∂ ¿¸»Ø ======
-        private void LightThemeBtnClick(object sender, EventArgs e)
-        {
-            // ∂Û¿Ã∆Æ∏µÂ -> ¥Ÿ≈©∏µÂ
-            // 50,51,57
-            // 223 224 226
-
-            this.BackColor = Color.FromArgb(50, 51, 57);
-            TextBox.BackColor = Color.FromArgb(50, 51, 57);
-            TextBox.ForeColor = Color.FromArgb(230, 230, 230);
-            DcCMOutput.BackColor = Color.FromArgb(50, 51, 57);
-            DcCMOutput.ForeColor = Color.FromArgb(230, 230, 230);
-
-            MadeLabel.ForeColor = Color.FromArgb(230, 230, 230);
-            EmailLabel.ForeColor = Color.FromArgb(230, 230, 230);
-            DiscordLabel.ForeColor = Color.FromArgb(230, 230, 230);
-
-            BoldChkBox.ForeColor = Color.FromArgb(223, 224, 226);
-            UndlChkBox.ForeColor = Color.FromArgb(223, 224, 226);
-
-            GreyBtn.BackColor = Color.FromArgb(50, 51, 57);
-            RedBtn.BackColor = Color.FromArgb(50, 51, 57);
-            GreenBtn.BackColor = Color.FromArgb(50, 51, 57);
-            YellowBtn.BackColor = Color.FromArgb(50, 51, 57);
-            BlueBtn.BackColor = Color.FromArgb(50, 51, 57);
-            PinkBtn.BackColor = Color.FromArgb(50, 51, 57);
-            TealBtn.BackColor = Color.FromArgb(50, 51, 57);
-            WhiteBtn.BackColor = Color.FromArgb(50, 51, 57);
-            WhiteBtn.ForeColor = Color.FromArgb(255, 255, 255);
-            DefaultBtn.BackColor = Color.FromArgb(50, 51, 57);
-            DefaultBtn.ForeColor = Color.FromArgb(223, 224, 226);
-
-            DeepTealBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            OrangeBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            Grey1BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            Grey2BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            Grey3BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            BlurpleBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            Grey4BgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            WarmIvoryBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-            DefaultBgBtn.BackColor = Color.FromArgb(50, 51, 57);
-            DefaultBgBtn.ForeColor = Color.FromArgb(223, 224, 226);
-
-            DarkThemeBtn.BackColor = Color.FromArgb(50, 51, 57);
-            DarkThemeBtn.ForeColor = Color.FromArgb(223, 224, 226);
-
-            ClrBtn.BackColor = Color.FromArgb(50, 51, 57);
-            ClrBtn.ForeColor = Color.FromArgb(223, 224, 226);
-
-            CopyBtn.BackColor = Color.FromArgb(50, 51, 57);
-            CopyBtn.ForeColor = Color.FromArgb(223, 224, 226);
-
-            SetTitleBarDark(true);
-
-            LightThemeBtn.Visible = false;
-            DarkThemeBtn.Visible = true;
-        }
-
-        private void DarkThemeBtnClick(object sender, EventArgs e)
-        {
-            // ¥Ÿ≈©∏µÂ -> ∂Û¿Ã∆Æ∏µÂ
-            // 251 251 251
-            // 50 51 57
-            this.BackColor = Color.FromArgb(251, 251, 251);
-            TextBox.BackColor = Color.FromArgb(251, 251, 251);
-            TextBox.ForeColor = Color.FromArgb(50, 51, 57);
-            DcCMOutput.BackColor = Color.FromArgb(251, 251, 251);
-            DcCMOutput.ForeColor = Color.FromArgb(50, 51, 57);
-
-            MadeLabel.ForeColor = Color.FromArgb(50, 51, 57);
-            EmailLabel.ForeColor = Color.FromArgb(50, 51, 57);
-            DiscordLabel.ForeColor = Color.FromArgb(50, 51, 57);
-
-            BoldChkBox.ForeColor = Color.FromArgb(50, 51, 57);
-            UndlChkBox.ForeColor = Color.FromArgb(50, 51, 57);
-
-            GreyBtn.BackColor = Color.FromArgb(251, 251, 251);
-            RedBtn.BackColor = Color.FromArgb(251, 251, 251);
-            GreenBtn.BackColor = Color.FromArgb(251, 251, 251);
-            YellowBtn.BackColor = Color.FromArgb(251, 251, 251);
-            BlueBtn.BackColor = Color.FromArgb(251, 251, 251);
-            PinkBtn.BackColor = Color.FromArgb(251, 251, 251);
-            TealBtn.BackColor = Color.FromArgb(251, 251, 251);
-            WhiteBtn.BackColor = Color.FromArgb(251, 251, 251);
-            WhiteBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            DefaultBtn.BackColor = Color.FromArgb(251, 251, 251);
-            DefaultBtn.ForeColor = Color.FromArgb(50, 51, 57);
-
-            OrangeBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            Grey1BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            Grey2BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            Grey3BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            BlurpleBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            Grey4BgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            WarmIvoryBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-            DefaultBgBtn.BackColor = Color.FromArgb(251, 251, 251);
-            DefaultBgBtn.ForeColor = Color.FromArgb(50, 51, 57);
-
-            DarkThemeBtn.BackColor = Color.FromArgb(50, 51, 57);
-            DarkThemeBtn.ForeColor = Color.FromArgb(223, 224, 226);
-
-            ClrBtn.BackColor = Color.FromArgb(251, 251, 251);
-            ClrBtn.ForeColor = Color.FromArgb(50, 51, 57);
-
-            CopyBtn.BackColor = Color.FromArgb(251, 251, 251);
-            CopyBtn.ForeColor = Color.FromArgb(50, 51, 57);
-
-            SetTitleBarDark(false);
-
-            DarkThemeBtn.Visible = false;
-            LightThemeBtn.Visible = true;
-        }
-
-        // æ»≥ª√¢ ¥›±‚
-        private void InstructionClick(object sender, EventArgs e)
-        {
-            InstructionPic.Visible = false;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            // ¿ÂΩ«¡ª
-        }
-
-        private void ServerInvClick(object sender, EventArgs e)
-        {
-            try
-            {
-                var psi = new ProcessStartInfo
-                {
-                    FileName = "https://discord.gg/sXNQBhGSwr",
-                    UseShellExecute = true
-                };
-                Process.Start(psi);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"∏µ≈©∏¶ ø≠ ºˆ æ¯Ω¿¥œ¥Ÿ. ¥ŸΩ√ Ω√µµ«ÿ¡÷ººø‰.");
-            }
-        }
-        private void EmailLabel_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var psi = new ProcessStartInfo
-                {
-                    FileName = "https://mail.google.com/mail/",
-                    UseShellExecute = true
-                };
-                Process.Start(psi);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"∏µ≈©∏¶ ø≠ ºˆ æ¯Ω¿¥œ¥Ÿ. ¥ŸΩ√ Ω√µµ«ÿ¡÷ººø‰.");
-            }
         }
     }
 }
