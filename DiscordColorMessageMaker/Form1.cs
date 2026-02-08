@@ -10,6 +10,7 @@ namespace DiscordColorMessageMaker
 {
     public partial class Form1 : Form
     {
+        // 커밋용
         // ===== 상태 변수 =====
         bool isBold = false;
         bool isUnderline = false;
